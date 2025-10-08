@@ -19,9 +19,9 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
         txtMateria = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txAnio = new javax.swing.JTextField();
-        bttGuardar = new javax.swing.JButton();
-        bttBorrar = new javax.swing.JButton();
-        bttSalir = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -42,24 +42,24 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Año al que pertenece");
 
-        bttGuardar.setText("Guardar");
-        bttGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttGuardarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
-        bttBorrar.setText("Nuevo");
-        bttBorrar.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrar.setText("Nuevo");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttBorrarActionPerformed(evt);
+                btnBorrarActionPerformed(evt);
             }
         });
 
-        bttSalir.setText("Salir");
-        bttSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttSalirActionPerformed(evt);
+                btnSalirActionPerformed(evt);
             }
         });
 
@@ -92,11 +92,11 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(163, Short.MAX_VALUE)
-                        .addComponent(bttGuardar)
+                        .addComponent(btnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bttBorrar)
+                        .addComponent(btnBorrar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bttSalir)))
+                        .addComponent(btnSalir)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -117,38 +117,28 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                     .addComponent(txAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bttGuardar)
-                    .addComponent(bttBorrar)
-                    .addComponent(bttSalir)))
+                    .addComponent(btnGuardar)
+                    .addComponent(btnBorrar)
+                    .addComponent(btnSalir)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bttSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttSalirActionPerformed
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
-    }//GEN-LAST:event_bttSalirActionPerformed
+    }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void bttGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttGuardarActionPerformed
-        try {
-            int codigo = Integer.parseInt(txCodigo.getText());
-
-            String nombre = txtMateria.getText();
-            int anio = Integer.parseInt(txAnio.getText());
-
-            Materia sc = new Materia(codigo, nombre, anio);
-            MenuPrincipal.materias.add(sc);
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(rootPane, "Por favor.Ingrese un numero");
-        }
-    }//GEN-LAST:event_bttGuardarActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
 
-    private void bttBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttBorrarActionPerformed
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         txCodigo.setText("");
         txtMateria.setText("");
         txAnio.setText("");
-    }//GEN-LAST:event_bttBorrarActionPerformed
+    }//GEN-LAST:event_btnBorrarActionPerformed
 
     private void txCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txCodigoActionPerformed
         // TODO add your handling code here:
@@ -156,9 +146,9 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bttBorrar;
-    private javax.swing.JButton bttGuardar;
-    private javax.swing.JButton bttSalir;
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
