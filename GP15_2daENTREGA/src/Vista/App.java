@@ -1,14 +1,25 @@
 package Vista;
 
-/** 
-    @author Grupo 15
-    Luis Ezequiel Sosa
-    Lucas Saidman
-    Luca Rodrigaño
-    Ignacio Rodriguez
-**/
+import Modelo.Alumno;
+import Modelo.Materia;
+import java.util.ArrayList;
+import javax.swing.JInternalFrame;
+
+/**
+ * @author Grupo 15 Luis Ezequiel Sosa Lucas Saidman Luca Rodrigaño Ignacio
+ * Rodriguez
+*
+ */
 
 public class App extends javax.swing.JFrame {
+
+    private ArrayList<Alumno> ALUMNOS = new ArrayList<>();
+    private ArrayList<Materia> MATERIAS = new ArrayList<>();
+
+    private JInternalFrame vistaAlumno;
+    private JInternalFrame vistaMateria;
+    private JInternalFrame vistaInscripcion;
+    private JInternalFrame vistaInscriptos;
 
     /**
      * Creates new form App
@@ -26,21 +37,129 @@ public class App extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Escritorio = new javax.swing.JDesktopPane();
+        jmb_menu = new javax.swing.JMenuBar();
+        jm_alumno = new javax.swing.JMenu();
+        jmi_agregar_alumno = new javax.swing.JMenuItem();
+        jm_materia = new javax.swing.JMenu();
+        jmi_agregar_materia = new javax.swing.JMenuItem();
+        jm_registro = new javax.swing.JMenu();
+        jmi_inscripcion_materias = new javax.swing.JMenuItem();
+        jmi_lista = new javax.swing.JMenuItem();
+        jm_salir = new javax.swing.JMenu();
+        jmi_salir = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout EscritorioLayout = new javax.swing.GroupLayout(Escritorio);
+        Escritorio.setLayout(EscritorioLayout);
+        EscritorioLayout.setHorizontalGroup(
+            EscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 597, Short.MAX_VALUE)
+        );
+        EscritorioLayout.setVerticalGroup(
+            EscritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 351, Short.MAX_VALUE)
+        );
+
+        jm_alumno.setText("Alumno");
+
+        jmi_agregar_alumno.setText("Agregar Alumno");
+        jmi_agregar_alumno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_agregar_alumnoActionPerformed(evt);
+            }
+        });
+        jm_alumno.add(jmi_agregar_alumno);
+
+        jmb_menu.add(jm_alumno);
+
+        jm_materia.setText("Materia");
+
+        jmi_agregar_materia.setText("Agregar Materia");
+        jmi_agregar_materia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_agregar_materiaActionPerformed(evt);
+            }
+        });
+        jm_materia.add(jmi_agregar_materia);
+
+        jmb_menu.add(jm_materia);
+
+        jm_registro.setText("Registro");
+
+        jmi_inscripcion_materias.setText("Inscripcion a Materias");
+        jmi_inscripcion_materias.setToolTipText("");
+        jmi_inscripcion_materias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_inscripcion_materiasActionPerformed(evt);
+            }
+        });
+        jm_registro.add(jmi_inscripcion_materias);
+
+        jmi_lista.setText("Lista");
+        jmi_lista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_listaActionPerformed(evt);
+            }
+        });
+        jm_registro.add(jmi_lista);
+
+        jmb_menu.add(jm_registro);
+
+        jm_salir.setText("Salir");
+
+        jmi_salir.setText("Salir");
+        jmi_salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_salirActionPerformed(evt);
+            }
+        });
+        jm_salir.add(jmi_salir);
+
+        jmb_menu.add(jm_salir);
+
+        setJMenuBar(jmb_menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Escritorio)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Escritorio)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jmi_agregar_alumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_alumnoActionPerformed
+       
+    }//GEN-LAST:event_jmi_agregar_alumnoActionPerformed
+
+    private void jmi_agregar_materiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_materiaActionPerformed
+        
+    }//GEN-LAST:event_jmi_agregar_materiaActionPerformed
+
+    private void jmi_inscripcion_materiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_inscripcion_materiasActionPerformed
+        
+    }//GEN-LAST:event_jmi_inscripcion_materiasActionPerformed
+
+    private void jmi_listaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_listaActionPerformed
+        
+    }//GEN-LAST:event_jmi_listaActionPerformed
+
+    private void jmi_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_salirActionPerformed
+        dispose();
+    }//GEN-LAST:event_jmi_salirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +197,16 @@ public class App extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane Escritorio;
+    private javax.swing.JMenu jm_alumno;
+    private javax.swing.JMenu jm_materia;
+    private javax.swing.JMenu jm_registro;
+    private javax.swing.JMenu jm_salir;
+    private javax.swing.JMenuBar jmb_menu;
+    private javax.swing.JMenuItem jmi_agregar_alumno;
+    private javax.swing.JMenuItem jmi_agregar_materia;
+    private javax.swing.JMenuItem jmi_inscripcion_materias;
+    private javax.swing.JMenuItem jmi_lista;
+    private javax.swing.JMenuItem jmi_salir;
     // End of variables declaration//GEN-END:variables
 }
