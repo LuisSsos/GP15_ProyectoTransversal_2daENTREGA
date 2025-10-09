@@ -143,10 +143,19 @@ public class App extends javax.swing.JFrame {
 
     private void jmi_agregar_alumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_alumnoActionPerformed
        
+                                                
+    VistaAlumno vistaAlu = new VistaAlumno();
+    Escritorio.add(vistaAlu);
+    vistaAlu.setVisible(true);
+
     }//GEN-LAST:event_jmi_agregar_alumnoActionPerformed
 
     private void jmi_agregar_materiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_materiaActionPerformed
-        
+
+    VistaMaterias vistaMat = new VistaMaterias();
+    Escritorio.add(vistaMat);
+    vistaMat.setVisible(true);
+    
     }//GEN-LAST:event_jmi_agregar_materiaActionPerformed
 
     private void jmi_inscripcion_materiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_inscripcion_materiasActionPerformed

@@ -21,7 +21,9 @@ import javax.swing.*;
  */
 public class VistaAlumno extends javax.swing.JInternalFrame {
 
-   
+       public VistaAlumno() {
+        initComponents();
+    }
     
     /**
      * Creates new form VistaAlumno
