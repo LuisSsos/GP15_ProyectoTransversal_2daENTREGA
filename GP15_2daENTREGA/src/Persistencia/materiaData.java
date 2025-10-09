@@ -1,4 +1,4 @@
-package persistencia;
+package Persistencia;
 
 import Modelo.Conexion;
 import Modelo.Materia;
@@ -7,6 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*@author Grupo 15
+    Luis Ezequiel Sosa
+    Lucas Saidman
+    Ignacio Rodriguez
+    Luca Rodrigaño
+*/
 public class materiaData {
 
     public Materia guardar(Materia m) throws SQLException {

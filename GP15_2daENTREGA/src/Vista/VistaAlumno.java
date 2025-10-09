@@ -9,14 +9,11 @@ import java.util.Set;
 import javax.swing.*;
 
 /**
-    @author Grupo 6 
+    @author Grupo 15
     Luis Ezequiel Sosa
     Lucas Saidman
-    Gimenez Diego Ruben
-    Carlos German Mecias Giacomelli
-    Tomas Migliozzi Badani
-    Luca Rodrigaño
     Ignacio Rodriguez
+    Luca Rodrigaño
  
  */
 public class VistaAlumno extends javax.swing.JInternalFrame {
