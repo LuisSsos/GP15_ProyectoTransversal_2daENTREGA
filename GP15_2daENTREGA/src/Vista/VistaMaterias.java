@@ -2,6 +2,14 @@ package Vista;
 
 import javax.swing.JOptionPane;
 
+/** 
+    @author Grupo 15
+    Luis Ezequiel Sosa
+    Lucas Saidman
+    Luca Rodrigaño
+    Ignacio Rodriguez
+**/
+
 public class VistaMaterias extends javax.swing.JInternalFrame {
 
     public VistaMaterias() {

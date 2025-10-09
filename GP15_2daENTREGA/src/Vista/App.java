@@ -1,10 +1,12 @@
 package Vista;
 
-/**
-* @author Grupo 15 Luis Ezequiel Sosa Lucas Saidman Luca Rodrigaño Ignacio
-* Rodriguez
-*
-*/
+/** 
+    @author Grupo 15
+    Luis Ezequiel Sosa
+    Lucas Saidman
+    Luca Rodrigaño
+    Ignacio Rodriguez
+**/
 
 public class App extends javax.swing.JFrame {
 

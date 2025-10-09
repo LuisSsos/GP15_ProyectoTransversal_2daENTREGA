@@ -1,21 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
 package Vista;
 
 import Modelo.Alumno;
 import java.util.Set;
 import javax.swing.*;
 
-/**
+/** 
     @author Grupo 15
     Luis Ezequiel Sosa
     Lucas Saidman
-    Ignacio Rodriguez
     Luca Rodrigaño
- 
- */
+    Ignacio Rodriguez
+**/
+
 public class VistaAlumno extends javax.swing.JInternalFrame {
 
        public VistaAlumno() {

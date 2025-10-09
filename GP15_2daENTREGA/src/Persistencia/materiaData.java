@@ -7,12 +7,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/*@author Grupo 15
+/** 
+    @author Grupo 15
     Luis Ezequiel Sosa
     Lucas Saidman
-    Ignacio Rodriguez
     Luca Rodrigaño
-*/
+    Ignacio Rodriguez
+**/
+
 public class materiaData {
 
     public Materia guardar(Materia m) throws SQLException {
