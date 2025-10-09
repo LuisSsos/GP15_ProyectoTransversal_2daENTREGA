@@ -1,25 +1,18 @@
 package Vista;
 
-import Modelo.Alumno;
-import Modelo.Materia;
-import java.util.ArrayList;
-import javax.swing.JInternalFrame;
-
 /**
- * @author Grupo 15 Luis Ezequiel Sosa Lucas Saidman Luca Rodrigaño Ignacio
- * Rodriguez
+* @author Grupo 15 Luis Ezequiel Sosa Lucas Saidman Luca Rodrigaño Ignacio
+* Rodriguez
 *
- */
+*/
 
 public class App extends javax.swing.JFrame {
 
-    private ArrayList<Alumno> ALUMNOS = new ArrayList<>();
-    private ArrayList<Materia> MATERIAS = new ArrayList<>();
-
-    private JInternalFrame vistaAlumno;
-    private JInternalFrame vistaMateria;
-    private JInternalFrame vistaInscripcion;
-    private JInternalFrame vistaInscriptos;
+    private final Persistencia.alumnoData alumnoDao = new Persistencia.alumnoData();
+    private final Persistencia.materiaData materiaDao = new Persistencia.materiaData();
+    
+    private VistaAlumno vistaAlumno;
+    private VistaMaterias vistaMaterias;
 
     /**
      * Creates new form App
@@ -146,20 +139,19 @@ public class App extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jmi_agregar_alumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_alumnoActionPerformed
-       
-                                                
-    VistaAlumno vistaAlu = new VistaAlumno();
-    Escritorio.add(vistaAlu);
-    vistaAlu.setVisible(true);
-
+        if(vistaAlumno == null || vistaAlumno.isClosed()){
+            vistaAlumno = new Vista.VistaAlumno();
+            Escritorio.add(vistaAlumno);
+            vistaAlumno.setVisible(true);
+        };                                           
     }//GEN-LAST:event_jmi_agregar_alumnoActionPerformed
 
     private void jmi_agregar_materiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_agregar_materiaActionPerformed
-
-    VistaMaterias vistaMat = new VistaMaterias();
-    Escritorio.add(vistaMat);
-    vistaMat.setVisible(true);
-    
+        if(vistaMaterias == null || vistaMaterias.isClosed()){
+            vistaMaterias = new Vista.VistaMaterias();
+            Escritorio.add(vistaMaterias);
+            vistaMaterias.setVisible(true);
+        };
     }//GEN-LAST:event_jmi_agregar_materiaActionPerformed
 
     private void jmi_inscripcion_materiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_inscripcion_materiasActionPerformed
