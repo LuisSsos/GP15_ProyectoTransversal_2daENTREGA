@@ -55,9 +55,9 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cb_fc" min="-2" pref="250" max="-2" attributes="0"/>
-                              <Component id="txt_nombre" min="-2" pref="250" max="-2" attributes="0"/>
+                              <Component id="txt_fc" min="-2" pref="250" max="-2" attributes="0"/>
                               <Component id="cb_regular" min="-2" pref="250" max="-2" attributes="0"/>
+                              <Component id="txt_nombre1" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
@@ -88,7 +88,7 @@
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="21" max="32767" attributes="0"/>
                   <Component id="sp_tabla_alumnos" min="-2" pref="946" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
@@ -119,12 +119,12 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lb_nombre" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="txt_nombre" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="txt_nombre1" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lb_fc" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="cb_fc" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="txt_fc" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -207,20 +207,19 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_dni">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_dniActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_apellido">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_apellidoActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="txt_nombre">
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cb_fc">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
+        <Component class="javax.swing.JTextField" name="txt_fc">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_fcActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_nuevo">
           <Properties>
@@ -288,6 +287,11 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txt_nombre1">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_nombre1ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
