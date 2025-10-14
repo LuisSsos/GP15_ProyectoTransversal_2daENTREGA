@@ -1,6 +1,13 @@
 package Vista;
 
+import Modelo.Materia;
+import Persistencia.materiaData;
+
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /** 
     @author Grupo 15
@@ -11,10 +18,234 @@ import javax.swing.JOptionPane;
 **/
 
 public class VistaMaterias extends javax.swing.JInternalFrame {
+    
+    private final materiaData dao = new materiaData();
+    private DefaultTableModel modelo;
+    private Materia seleccionadoOriginal = null;
 
     public VistaMaterias() {
         initComponents();
+        
+        modelo = (DefaultTableModel) tabla_materias.getModel();
+        tabla_materias.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        cb_cuatrimestre.setModel(new DefaultComboBoxModel<>(new String[]{"1","2","3","4","5","6"}));
+        cb_cuatrimestre.setSelectedIndex(-1);
+        cb_estado.setModel(new DefaultComboBoxModel<>(new String[]{"Activa","Inactiva"}));
+        cb_estado.setSelectedIndex(0);
+
+        escucharCambios();
+        cargarTablaBD();
+        reglasHabilitacion();
     }
+    
+    private void escucharCambios() {
+        java.awt.event.KeyAdapter ka = new java.awt.event.KeyAdapter() {
+            @Override public void keyReleased(java.awt.event.KeyEvent e) {
+                reglasHabilitacion();
+            }
+        };
+        txt_nombre.addKeyListener(ka);
+
+        cb_cuatrimestre.addItemListener(e -> reglasHabilitacion());
+        cb_estado.addItemListener(e -> reglasHabilitacion());
+
+        tabla_materias.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseClicked(java.awt.event.MouseEvent e) {
+                tablaClick();
+            }
+        });
+    }
+    
+    private void reglasHabilitacion() {
+        boolean nombreIngresado = !txt_nombre.getText().trim().isEmpty();
+        boolean haySeleccion    = tabla_materias.getSelectedRow() >= 0 && seleccionadoOriginal != null;
+
+        btn_nuevo.setEnabled(true);
+        btn_buscar.setEnabled(nombreIngresado);
+
+        boolean puedeGuardar = false;
+        String  nombre = nombreActual();
+        Integer cuatrimestre   = getCuatrimestreFromCombo();
+        Boolean estado = getEstadoFromCombo();
+
+        if (nombre != null && !nombre.isEmpty() && cuatrimestre != null && estado != null && !haySeleccion) {
+            try {
+                puedeGuardar = !existeNombre(nombre);
+            } catch (Exception e) {
+                puedeGuardar = false;
+            }
+        }
+        btn_guardar.setEnabled(puedeGuardar);
+
+        boolean puedeActualizar = false;
+        if (haySeleccion && estado != null) {
+            puedeActualizar = (estado != seleccionadoOriginal.isEstado());
+        }
+        
+        btn_actualizar.setEnabled(puedeActualizar);
+        btn_eliminar.setEnabled(haySeleccion);
+    }
+    
+    private void cargarTablaBD() {
+        try {
+            List<Materia> datos = dao.listarTodas();
+            cargarTabla(datos);
+        } catch (SQLException e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
+    }
+
+    private void cargarTabla(List<Materia> datos) {
+        limpiarTabla();
+        for (Materia m : datos) {
+            modelo.addRow(new String[]{
+                nvl(m.getNombre()),
+                String.valueOf(m.getCuatrimestre()),
+                m.isEstado() ? "Activa" : "Inactiva"
+            });
+        }
+        tabla_materias.clearSelection();
+        seleccionadoOriginal = null;
+        reglasHabilitacion();
+    }
+
+    private void limpiarTabla() {
+        modelo.setRowCount(0);
+    }
+    
+    private void seleccionarFilaPorNombre(String nombre) {
+        if (nombre == null) {
+            return;
+        }
+        
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Object valor = modelo.getValueAt(i, 0);
+            if (valor != null && nombre.equalsIgnoreCase(valor.toString())) {
+                tabla_materias.setRowSelectionInterval(i, i);
+                tabla_materias.scrollRectToVisible(tabla_materias.getCellRect(i, 0, true));
+                break;
+            }
+        }
+    }
+    
+    private void tablaClick() {
+        int fila = tabla_materias.getSelectedRow();
+        if (fila < 0) {
+            return;
+        }
+
+        String  nombre = String.valueOf(modelo.getValueAt(fila, 0));
+        Integer cuatrimestre = parseEntero(String.valueOf(modelo.getValueAt(fila, 1)));
+
+        try {
+            Materia m = null;
+            if (cuatrimestre != null) {
+                m = dao.buscarPorNombreYCuat(nombre, cuatrimestre);
+            }
+            
+            if (m == null) {
+                for (Materia x : dao.listarTodas()) {
+                    if (x.getNombre() != null && x.getNombre().equalsIgnoreCase(nombre)) {
+                        m = x;
+                        break;
+                    }
+                }
+            }
+            
+            if (m != null) {
+                setFormulario(m);
+                seleccionadoOriginal = m;
+                reglasHabilitacion();
+            }
+        } catch (SQLException e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
+    }
+    
+    private String nombreActual() {
+        return txt_nombre.getText().trim();
+    }
+
+    private Integer getCuatrimestreFromCombo() {
+        Object sel = cb_cuatrimestre.getSelectedItem();
+        
+        if (sel == null) {
+            return null;
+        }
+        
+        try {
+            return Integer.parseInt(sel.toString().trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Boolean getEstadoFromCombo() {
+        Object sel = cb_estado.getSelectedItem();
+        
+        if (sel == null) {
+            return null;
+        }
+        
+        String v = sel.toString().trim();
+        if (v.equalsIgnoreCase("Activa")) {
+            return true;
+        }
+        if (v.equalsIgnoreCase("Inactiva")) {
+            return false;
+        }
+        return null;
+    }
+
+    private void setFormulario(Materia m) {
+        txt_nombre.setText(nvl(m.getNombre()));
+        cb_cuatrimestre.setSelectedItem(String.valueOf(m.getCuatrimestre()));
+        cb_estado.setSelectedItem(m.isEstado() ? "Activa" : "Inactiva");
+    }
+
+    private void limpiarFormulario() {
+        txt_nombre.setText("");
+        cb_cuatrimestre.setSelectedIndex(-1);
+        cb_estado.setSelectedIndex(0);
+        tabla_materias.clearSelection();
+        seleccionadoOriginal = null;
+        reglasHabilitacion();
+        txt_nombre.requestFocus();
+    }
+
+    private boolean existeNombre(String nombre) throws SQLException {
+        for (Materia m : dao.listarTodas()) {
+            if (m.getNombre() != null && m.getNombre().equalsIgnoreCase(nombre)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private String nvl(String s){
+        return s == null ? "" : s;
+    }
+
+    private Integer parseEntero(String s) {
+        try {
+            return Integer.parseInt(s.trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void msg(String s){
+        JOptionPane.showMessageDialog(this, s);
+    }
+    
+    private void error(Exception e){
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -35,6 +266,7 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
         btn_eliminar = new javax.swing.JButton();
         btn_buscar = new javax.swing.JButton();
         cb_estado = new javax.swing.JComboBox<>();
+        btn_salir = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -73,11 +305,6 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        tabla_materias.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabla_materiasMouseClicked(evt);
-            }
-        });
         sp_tabla_materias.setViewportView(tabla_materias);
 
         lb_nombre.setText("Nombre:");
@@ -85,18 +312,6 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
         lb_estado.setText("Estado:");
 
         lb_cuatrimestre.setText("Cuatrimestre:");
-
-        txt_nombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_nombreActionPerformed(evt);
-            }
-        });
-
-        cb_cuatrimestre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cb_cuatrimestreActionPerformed(evt);
-            }
-        });
 
         btn_nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/escoba.png"))); // NOI18N
         btn_nuevo.setText("Nuevo");
@@ -137,9 +352,10 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
             }
         });
 
-        cb_estado.addActionListener(new java.awt.event.ActionListener() {
+        btn_salir.setText("Salir");
+        btn_salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cb_estadoActionPerformed(evt);
+                btn_salirActionPerformed(evt);
             }
         });
 
@@ -162,7 +378,9 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_salir, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_gestion_materiasLayout.createSequentialGroup()
                         .addGroup(pnl_gestion_materiasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnl_gestion_materiasLayout.createSequentialGroup()
@@ -179,7 +397,7 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                         .addComponent(lb_estado, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(cb_estado, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         pnl_gestion_materiasLayout.setVerticalGroup(
             pnl_gestion_materiasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,8 +426,9 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
                     .addComponent(btn_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .addComponent(btn_eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_salir, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,41 +445,158 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tabla_materiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_materiasMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tabla_materiasMouseClicked
-
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
-        // TODO add your handling code here:
+        String nombre = nombreActual();
+        
+        if (nombre.isEmpty()) {
+            msg("Ingrese el nombre de la materia");
+            txt_nombre.requestFocus();
+            return;
+        }
+
+        try {
+            Materia encontrada = null;
+            Integer cuat = getCuatrimestreFromCombo();
+            
+            if (cuat != null) {
+                encontrada = dao.buscarPorNombreYCuat(nombre, cuat);
+            }
+            
+            if (encontrada == null) {
+                for (Materia m : dao.listarTodas()) {
+                    if (m.getNombre() != null && m.getNombre().equalsIgnoreCase(nombre)) {
+                        encontrada = m;
+                        break;
+                    }
+                }
+            }
+            
+            if (encontrada == null) {
+                msg("No existe una materia con ese nombre");
+                return;
+            }
+
+            setFormulario(encontrada);
+            seleccionadoOriginal = encontrada;
+            seleccionarFilaPorNombre(encontrada.getNombre());
+            reglasHabilitacion();
+        } catch (Exception e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
     }//GEN-LAST:event_btn_buscarActionPerformed
 
-    private void txt_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_nombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_nombreActionPerformed
-
-    private void cb_cuatrimestreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_cuatrimestreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cb_cuatrimestreActionPerformed
-
-    private void cb_estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_estadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cb_estadoActionPerformed
-
     private void btn_nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoActionPerformed
-        // TODO add your handling code here:
+        limpiarFormulario();
     }//GEN-LAST:event_btn_nuevoActionPerformed
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
-        // TODO add your handling code here:
+        String  nombre = nombreActual();
+        if (nombre.isEmpty()) {
+            msg("Complete Nombre");
+            txt_nombre.requestFocus();
+            return;
+        }
+
+        Integer cuat = getCuatrimestreFromCombo();
+        if (cuat == null) {
+            msg("Seleccione Cuatrimestre");
+            cb_cuatrimestre.requestFocus();
+            return;
+        }
+
+        Boolean estado = getEstadoFromCombo();
+        if (estado == null) {
+            msg("Seleccione Estado");
+            cb_estado.requestFocus();
+            return;
+        }
+
+        try {
+            if (existeNombre(nombre)) {
+                msg("Ya existe una materia con ese nombre");
+                return;
+            }
+
+            Materia m = new Materia(nombre, cuat, estado);
+            dao.guardar(m);
+
+            msg("Materia guardada");
+            cargarTablaBD();
+            limpiarFormulario();
+        } catch (Exception e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void btn_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_actualizarActionPerformed
-        // TODO add your handling code here:
+        if (seleccionadoOriginal == null) {
+            msg("Seleccione una materia para actualizar");
+            return;
+        }
+
+        Boolean estado = getEstadoFromCombo();
+        if (estado == null) {
+            msg("Seleccione Estado");
+            cb_estado.requestFocus();
+            return;
+        }
+
+        try {
+            String nombreBase = seleccionadoOriginal.getNombre();
+            int cuatBase = seleccionadoOriginal.getCuatrimestre();
+
+            if (estado) {
+                dao.altaLogica(seleccionadoOriginal.getIdMateria());
+            } else {
+                dao.bajaLogica(seleccionadoOriginal.getIdMateria());
+            }
+
+            cargarTablaBD();
+
+            seleccionarFilaPorNombre(nombreBase);
+            Materia actualizada = dao.buscarPorNombreYCuat(nombreBase, cuatBase);
+            if (actualizada != null) {
+                setFormulario(actualizada);
+                seleccionadoOriginal = actualizada;
+            } else {
+                seleccionadoOriginal = null;
+            }
+
+            msg("Estado actualizado");
+        } catch (Exception e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
     }//GEN-LAST:event_btn_actualizarActionPerformed
 
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
-        // TODO add your handling code here:
+        if (seleccionadoOriginal == null) {
+            msg("Seleccione una materia para eliminar");
+            return;
+        }
+        
+        int r = JOptionPane.showConfirmDialog(this, "Eliminar definitivamente la materia \"" + seleccionadoOriginal.getNombre() + "\"?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        
+        if (r != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            dao.borrar(seleccionadoOriginal.getIdMateria());
+            msg("Materia eliminada");
+            cargarTablaBD();
+            limpiarFormulario();
+        } catch (Exception e) {
+            error(e);
+            System.out.println("ERROR: " + e);
+        }
     }//GEN-LAST:event_btn_eliminarActionPerformed
+
+    private void btn_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salirActionPerformed
+        dispose();
+    }//GEN-LAST:event_btn_salirActionPerformed
 
 
 
@@ -270,6 +606,7 @@ public class VistaMaterias extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_eliminar;
     private javax.swing.JButton btn_guardar;
     private javax.swing.JButton btn_nuevo;
+    private javax.swing.JButton btn_salir;
     private javax.swing.JComboBox<String> cb_cuatrimestre;
     private javax.swing.JComboBox<String> cb_estado;
     private javax.swing.JLabel lb_cuatrimestre;
